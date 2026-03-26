@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whoop — Retour d'expérience honnête</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060606;
+    --surface:#0e0e0e;
+    --surface2:#151515;
+    --border:rgba(255,255,255,.06);
+    --text:#e8e6e0;
+    --text-dim:rgba(232,230,224,.45);
+    --text-mid:rgba(232,230,224,.65);
+    --accent:#00d278;
+    --accent-glow:rgba(0,210,120,.12);
+    --purple:#8b5cf6;
+    --amber:#f59e0b;
+    --rose:#f43f5e;
+    --blue:#3b82f6;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  html{
+    scroll-behavior:smooth;
+    background:var(--bg);
+  }
+
+  body{
+    font-family:'DM Sans',sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ========== HERO ========== */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:60px 24px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .hero::before{
+    content:'';
+    position:absolute;
+    top:-200px;
+    left:50%;
+    transform:translateX(-50%);
+    width:600px;height:600px;
+    background:radial-gradient(circle,rgba(0,210,120,.08) 0%,transparent 65%);
+    pointer-events:none;
+  }
+
+  .hero::after{
+    content:'';
+    position:absolute;
+    bottom:0;left:0;right:0;
+    height:200px;
+    background:linear-gradient(to top,var(--bg),transparent);
+    pointer-events:none;
+  }
+
+  .hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--accent-glow);
+    border:1px solid rgba(0,210,120,.18);
+    border-radius:100px;
+    padding:8px 18px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    margin-bottom:32px;
+    animation:fadeDown .8s ease .2s both;
+  }
+
+  .hero-badge::before{
+    content:'';width:7px;height:7px;
+    background:var(--accent);border-radius:50%;
+    box-shadow:0 0 10px var(--accent);
+    animation:pulse 2s ease infinite;
+  }
+
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  .hero h1{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(42px,7vw,72px);
+    font-weight:400;
+    line-height:1.1;
+    letter-spacing:-1px;
+    margin-bottom:24px;
+    animation:fadeDown .8s ease .4s both;
+  }
+
+  .hero h1 em{
+    font-style:italic;
+    background:linear-gradient(135deg,var(--accent),#00e88a);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .hero-sub{
+    font-size:17px;
+    color:var(--text-dim);
+    max-width:520px;
+    line-height:1.8;
+    animation:fadeDown .8s ease .6s both;
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom:40px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;flex-direction:column;
+    align-items:center;gap:8px;
+    color:var(--text-dim);
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    animation:fadeDown .8s ease 1s both;
+    z-index:2;
+  }
+
+  .scroll-hint .arrow{
+    width:1px;height:30px;
+    background:linear-gradient(to bottom,var(--accent),transparent);
+    animation:scrollBounce 2s ease infinite;
+  }
+
+  @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ========== CONTENT WRAPPER ========== */
+  .content{
+    max-width:680px;
+    margin:0 auto;
+    padding:0 24px 100px;
+  }
+
+  /* ========== PREAMBLE / CALLOUT ========== */
+  .callout{
+    background:linear-gradient(135deg,rgba(244,63,94,.06),rgba(244,63,94,.02));
+    border:1px solid rgba(244,63,94,.12);
+    border-radius:20px;
+    padding:32px;
+    margin-bottom:80px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .callout::before{
+    content:'⚠️';
+    font-size:28px;
+    position:absolute;
+    top:28px;left:28px;
+  }
+
+  .callout h3{
+    font-family:'Instrument Serif',serif;
+    font-size:22px;
+    font-weight:400;
+    margin-bottom:12px;
+    padding-left:44px;
+    color:var(--rose);
+  }
+
+  .callout p{
+    font-size:14.5px;
+    color:var(--text-mid);
+    line-height:1.8;
+  }
+
+  /* ========== SECTION ========== */
+  .section{
+    margin-bottom:80px;
+  }
+
+  .section-number{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--accent);
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .section-number::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg,rgba(0,210,120,.3),transparent);
+  }
+
+  .section h2{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(30px,5vw,40px);
+    font-weight:400;
+    line-height:1.15;
+    margin-bottom:24px;
+    letter-spacing:-.5px;
+  }
+
+  .section h2 .emoji{
+    display:inline-block;
+    margin-right:8px;
+  }
+
+  .section p{
+    font-size:15px;
+    color:var(--text-mid);
+    line-height:1.85;
+    margin-bottom:16px;
+  }
+
+  .section p strong{
+    color:var(--text);
+    font-weight:600;
+  }
+
+  /* ========== FEATURE CARDS ========== */
+  .features{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin:28px 0;
+  }
+
+  .feat{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:22px;
+    transition:border-color .3s,transform .3s;
+  }
+
+  .feat:hover{
+    border-color:rgba(0,210,120,.15);
+    transform:translateY(-2px);
+  }
+
+  .feat-icon{
+    font-size:22px;
+    margin-bottom:10px;
+  }
+
+  .feat-title{
+    font-size:13.5px;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+
+  .feat-desc{
+    font-size:12.5px;
+    color:var(--text-dim);
+    line-height:1.6;
+  }
+
+  /* ========== INSIGHT BOX ========== */
+  .insight{
+    background:var(--surface);
+    border-left:3px solid var(--accent);
+    border-radius:0 14px 14px 0;
+    padding:24px 28px;
+    margin:28px 0;
+  }
+
+  .insight-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--accent);
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:8px;
+  }
+
+  .insight p{
+    font-size:14px;
+    color:var(--text-mid);
+    line-height:1.75;
+    margin-bottom:0;
+  }
+
+  /* ========== HABIT TAGS ========== */
+  .habits{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:20px 0;
+  }
+
+  .habit{
+    background:var(--surface2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:8px 16px;
+    font-size:13px;
+    color:var(--text-mid);
+    font-weight:500;
+    transition:all .3s;
+  }
+
+  .habit:hover{
+    border-color:rgba(251,191,36,.2);
+    color:var(--amber);
+  }
+
+  /* ========== PROS/CONS ========== */
+  .verdict-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin:28px 0;
+  }
+
+  .verdict-col{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:28px;
+  }
+
+  .verdict-col h4{
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  .verdict-col.pros h4{color:var(--accent)}
+  .verdict-col.cons h4{color:var(--rose)}
+
+  .verdict-col ul{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .verdict-col li{
+    font-size:13px;
+    color:var(--text-mid);
+    line-height:1.6;
+    padding-left:20px;
+    position:relative;
+  }
+
+  .verdict-col.pros li::before{
+    content:'✓';
+    position:absolute;left:0;
+    color:var(--accent);
+    font-weight:700;
+    font-size:12px;
+  }
+
+  .verdict-col.cons li::before{
+    content:'✗';
+    position:absolute;left:0;
+    color:var(--rose);
+    font-weight:700;
+    font-size:12px;
+  }
+
+  /* ========== SCORE BLOCK ========== */
+  .score-block{
+    background:linear-gradient(135deg,var(--surface),var(--surface2));
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:48px;
+    text-align:center;
+    margin:60px 0 40px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .score-block::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 0%,var(--accent-glow),transparent 60%);
+    pointer-events:none;
+  }
+
+  .score-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:3px;
+    margin-bottom:16px;
+  }
+
+  .score-number{
+    font-family:'Instrument Serif',serif;
+    font-size:72px;
+    line-height:1;
+    margin-bottom:8px;
+  }
+
+  .score-number span{
+    background:linear-gradient(135deg,var(--accent),#00e88a);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .score-number small{
+    font-size:36px;
+    color:var(--text-dim);
+    -webkit-text-fill-color:var(--text-dim);
+  }
+
+  .score-bar-track{
+    width:200px;
+    height:6px;
+    background:rgba(255,255,255,.06);
+    border-radius:3px;
+    margin:20px auto 0;
+    overflow:hidden;
+  }
+
+  .score-bar-fill{
+    width:80%;
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),#00e88a);
+    border-radius:3px;
+    box-shadow:0 0 12px rgba(0,210,120,.4);
+  }
+
+  /* ========== FOOTER ========== */
+  .footer{
+    text-align:center;
+    padding:40px 24px;
+    border-top:1px solid var(--border);
+    color:var(--text-dim);
+    font-size:13px;
+  }
+
+  .footer a{
+    color:var(--accent);
+    text-decoration:none;
+  }
+
+  /* ========== CTA REFERRAL ========== */
+  .cta{
+    background:linear-gradient(135deg,rgba(0,210,120,.06),rgba(0,210,120,.02));
+    border:1px solid rgba(0,210,120,.14);
+    border-radius:24px;
+    padding:48px 40px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+    margin-bottom:60px;
+  }
+
+  .cta-glow{
+    position:absolute;
+    top:-60px;left:50%;transform:translateX(-50%);
+    width:300px;height:200px;
+    background:radial-gradient(circle,rgba(0,210,120,.1),transparent 70%);
+    pointer-events:none;
+  }
+
+  .cta-icon{
+    font-size:36px;
+    margin-bottom:16px;
+    position:relative;z-index:1;
+  }
+
+  .cta h3{
+    font-family:'Instrument Serif',serif;
+    font-size:28px;
+    font-weight:400;
+    margin-bottom:12px;
+    position:relative;z-index:1;
+  }
+
+  .cta p{
+    font-size:15px;
+    color:var(--text-mid);
+    margin-bottom:28px;
+    position:relative;z-index:1;
+  }
+
+  .cta-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(135deg,var(--accent),#00e88a);
+    color:#060606;
+    font-size:15px;
+    font-weight:700;
+    padding:16px 36px;
+    border-radius:100px;
+    text-decoration:none;
+    transition:transform .3s,box-shadow .3s;
+    position:relative;z-index:1;
+    box-shadow:0 4px 24px rgba(0,210,120,.25);
+  }
+
+  .cta-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 32px rgba(0,210,120,.35);
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media(max-width:600px){
+    .features,.verdict-grid{grid-template-columns:1fr}
+    .hero{min-height:85vh;padding:40px 20px}
+    .content{padding:0 18px 80px}
+    .callout{padding:24px}
+    .score-block{padding:36px 24px}
+  }
+
+  /* ========== SCROLL REVEAL ========== */
+  .reveal{
+    opacity:0;
+    transform:translateY(30px);
+    transition:opacity .7s ease,transform .7s ease;
+  }
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-badge">Retour d'expérience</div>
+  <h1>Mon avis sincère<br>sur la <em>Whoop</em></h1>
+  <p class="hero-sub">Après plusieurs mois d'utilisation quotidienne, voici un retour honnête et détaillé pour t'aider à savoir si cette montre est vraiment faite pour toi.</p>
+  <div class="scroll-hint">
+    Découvrir
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ==================== CONTENT ==================== -->
+<div class="content">
+
+  <!-- CALLOUT -->
+  <div class="callout reveal">
+    <h3>Avant tout, pose-toi la bonne question</h3>
+    <p>Si tu n'es pas dans une démarche d'amélioration de ta santé — énergie, vitalité, performance, sommeil — alors <strong>ne la prends pas</strong>. C'est un outil, pas un accessoire de mode. J'ai vu pas mal de personnes la porter à Courchevel sans vraiment l'utiliser. La Whoop a de la valeur uniquement si tu exploites ses données au quotidien.</p>
+  </div>
+
+  <!-- SECTION 1: SOMMEIL -->
+  <div class="section reveal">
+    <div class="section-number">01 — Sommeil</div>
+    <h2><span class="emoji">💤</span> Le game-changer</h2>
+    <p>C'est <strong>la raison numéro 1</strong> pour laquelle j'ai pris la Whoop. Elle analyse tes cycles de sommeil et arrive à déterminer tes heures optimales de coucher et de lever. Le réveil par vibration douce au bon moment du cycle est un vrai plus — tu te réveilles naturellement au lieu d'être arraché du sommeil profond.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">🕐</div>
+        <div class="feat-title">Heures optimales</div>
+        <div class="feat-desc">Détecte automatiquement tes meilleures fenêtres de coucher et de lever</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📳</div>
+        <div class="feat-title">Réveil intelligent</div>
+        <div class="feat-desc">Vibration douce au moment idéal de ton cycle de sommeil</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">Score de récup</div>
+        <div class="feat-desc">Pourcentage quotidien de récupération pour adapter ta journée</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔄</div>
+        <div class="feat-title">Cycles détaillés</div>
+        <div class="feat-desc">Sommeil léger, profond, paradoxal — tout est décortiqué</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">💡 Mon retour honnête</div>
+      <p>Il faut faire la part des choses. On ne peut pas toujours écouter la montre à la lettre — les événements extérieurs, les changements de rythme (début de saison, voyages, etc.) font que tes données ne sont pas toujours fiables les premières semaines. <strong>Laisse-lui le temps de te connaître.</strong></p>
+    </div>
+  </div>
+
+  <!-- SECTION 2: JOURNAL -->
+  <div class="section reveal">
+    <div class="section-number">02 — Journal</div>
+    <h2><span class="emoji">🗞️</span> Le suivi d'habitudes</h2>
+    <p>C'est une fonctionnalité que j'ai commencé à utiliser bien après l'achat — et je regrette de ne pas l'avoir activée plus tôt. Le journal te permet d'<strong>ajouter des habitudes</strong> que tu veux suivre au quotidien, et surtout de voir leur impact direct sur ta récupération et tes performances.</p>
+    <p>Le principe est simple : chaque jour, tu coches ce que tu as fait ou pas. Au fil des semaines, tu commences à voir des corrélations claires entre tes habitudes et ton état. <strong>Ça te rend beaucoup plus conscient</strong> de ce que tu fais au quotidien, et les améliorations à faire deviennent évidentes.</p>
+
+    <div class="habits">
+      <span class="habit">🍷 Alcool</span>
+      <span class="habit">💧 Hydratation</span>
+      <span class="habit">📱 Temps d'écran</span>
+      <span class="habit">🧘 Méditation</span>
+      <span class="habit">🥗 Alimentation</span>
+      <span class="habit">☕ Caféine</span>
+      <span class="habit">📖 Lecture</span>
+      <span class="habit">🏋️ Sport</span>
+      <span class="habit">✨ + Perso</span>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">💡 Ce que ça change concrètement</div>
+      <p>Tu arrêtes de te mentir. Quand tu vois noir sur blanc que les soirs où tu bois, ta récupération chute de 30%, ça frappe différemment qu'un simple "je sais que c'est pas bien". Les données rendent la prise de conscience <strong>beaucoup plus puissante</strong>.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: IA -->
+  <div class="section reveal">
+    <div class="section-number">03 — Intelligence Artificielle</div>
+    <h2><span class="emoji">🤖</span> Le coach personnel</h2>
+    <p>J'ai commencé à tester l'IA de Whoop récemment et c'est clairement <strong>la fonctionnalité la plus prometteuse</strong>. Un exemple concret : j'avais un manque d'énergie flagrant, alors que ma montre indiquait une bonne nuit de sommeil et une bonne récupération.</p>
+    <p>J'ai demandé à l'IA comment ça se faisait. Elle m'a donné toutes les raisons logiques possibles en croisant l'ensemble de mes données — stress accumulé, hydratation insuffisante, surcharge d'entraînement sur la semaine, etc.</p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Analyse croisée</div>
+        <div class="feat-desc">Croise toutes tes données pour trouver des explications que tu ne vois pas</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💪</div>
+        <div class="feat-title">Programme muscu</div>
+        <div class="feat-desc">Créé sur mesure à partir de tes données et adapté à ton état du jour</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Adaptation en temps réel</div>
+        <div class="feat-desc">Modifie les charges et le volume selon ta récupération</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">Dialogue naturel</div>
+        <div class="feat-desc">Tu lui poses des questions et elle répond avec le contexte de TES données</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="insight-label">💡 À savoir</div>
+      <p>L'IA m'a carrément créé un <strong>programme de musculation personnalisé</strong> à partir de mes données, et elle va pouvoir adapter chaque séance en fonction de mon état de forme, modifier les charges, le volume, etc. C'est encore récent donc à tester sur le long terme, mais le potentiel est énorme.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4: VERDICT -->
+  <div class="section reveal">
+    <div class="section-number">04 — Verdict</div>
+    <h2>Pour qui c'est fait ?</h2>
+
+    <div class="verdict-grid">
+      <div class="verdict-col pros">
+        <h4>✅ Prends-la si…</h4>
+        <ul>
+          <li>Tu veux optimiser ton sommeil et ta récupération</li>
+          <li>Tu es sportif et tu veux adapter ton entraînement à ton état</li>
+          <li>Tu veux un suivi d'habitudes lié à des données concrètes</li>
+          <li>Tu es prêt à consulter tes données régulièrement</li>
+          <li>Tu veux un coach IA basé sur tes propres métriques</li>
+        </ul>
+      </div>
+      <div class="verdict-col cons">
+        <h4>❌ Évite si…</h4>
+        <ul>
+          <li>Tu cherches juste un bel accessoire</li>
+          <li>Tu ne veux pas changer tes habitudes</li>
+          <li>Tu n'es pas patient — il faut du temps pour calibrer</li>
+          <li>Tu veux une montre connectée classique (pas d'écran)</li>
+          <li>Tu n'es pas prêt à exploiter les données</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="score-block reveal">
+    <div class="score-label">Note globale</div>
+    <div class="score-number"><span>4</span><small>/5</small></div>
+    <div class="score-bar-track">
+      <div class="score-bar-fill"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- REFERRAL CTA -->
+<div class="content">
+  <div class="cta reveal">
+    <div class="cta-glow"></div>
+    <div class="cta-icon">🎁</div>
+    <h3>Envie de tester ?</h3>
+    <p>Obtenez un WHOOP gratuit et un mois gratuit en vous inscrivant avec mon lien de parrainage.</p>
+    <a href="https://join.whoop.com/FCBF65C2" target="_blank" rel="noopener" class="cta-btn">
+      Obtenir mon Whoop gratuit
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9 4m4 4L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</div>
+
+<div class="footer">
+  Retour d'expérience personnel
+</div>
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
